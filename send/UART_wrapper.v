@@ -4,6 +4,9 @@ module UART_wrapper (
     output  wire o_txd
 );
 
+    parameter D = 234;
+    parameter L = 8;
+
     reg [1:0]   r_state;
     reg         r_we;
     reg [7:0]   r_data;
@@ -12,8 +15,8 @@ module UART_wrapper (
     wire        w_busy;
 
     UART # (
-        .D(234),
-        .L(8)
+        .D(D),
+        .L(L)
     ) uart (
         .i_clk  (i_clk  ),
         .i_rst  (i_rst  ),
