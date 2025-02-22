@@ -11,8 +11,8 @@ module UART(
     parameter L = 8;   //234を表現するためには8bit必要
 
     reg [9:0]      r_data;
-    reg [L-1:0]    r_cnt;       
-    reg [3:0]      r_cnt_bit;
+    reg [L-1:0]    r_wait;       
+    reg [3:0]      r_cnt;
     reg            r_state;
 
     assign o_data       =   r_data[0];
@@ -21,8 +21,8 @@ module UART(
     always @(posedge i_clk or posedge i_rst) begin
         if(i_rst) begin
             r_state     <= 0;
-            r_cnt       <= 0;
-            r_cnt_bit   <= 4'd0;
+            r_wait       <= 0;
+            r_cnt   <= 4'd0;
             r_data      <= 10'b1111111111;
         end else begin
             case (r_state)
@@ -33,18 +33,18 @@ module UART(
                     end
                 end
                 1: begin
-                    if (r_cnt == D-1) begin
-                        if (r_cnt_bit == 4'd9) begin
+                    if (r_wait == D-1) begin
+                        if (r_cnt == 4'd9) begin
                             r_state <= 0;
-                            r_cnt <= 0;
-                            r_cnt_bit <= 4'd0;
+                            r_wait <= 0;
+                            r_cnt <= 4'd0;
                         end else begin
                             r_data <= {1'b1, r_data[9:1]};
-                            r_cnt <= 0;
-                            r_cnt_bit <= r_cnt_bit + 1'b1;
+                            r_wait <= 0;
+                            r_cnt <= r_cnt + 1'b1;
                         end
                     end else begin
-                        r_cnt <= r_cnt + 1'b1;
+                        r_wait <= r_wait + 1'b1;
                     end
                 end
             endcase
