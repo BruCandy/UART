@@ -41,7 +41,6 @@ module UART_wrapper (
                         4'd2 : r_data <= 8'h6c; // l
                         4'd3 : r_data <= 8'h6c; // l
                         4'd4 : r_data <= 8'h6f; // o
-                        4'd5 : r_data <= 8'h2c; // ,
                         4'd6 : r_data <= 8'h20; //  
                         4'd7 : r_data <= 8'h57; // W
                         4'd8 : r_data <= 8'h6f; // o
@@ -67,8 +66,10 @@ module UART_wrapper (
                     end
                 end
                 2'b10: begin
-                    // ここで次の動作を制御する（例えば連続送信など）
-                    // 今回は1回送信後に何もしない
+                    // ボタン(i_rst)を押して、もう一度送信
+                    r_we    <= 1'b0;
+                    r_cnt   <= 4'd0;
+                    r_state <= 2'b10;
                 end
             endcase
         end
