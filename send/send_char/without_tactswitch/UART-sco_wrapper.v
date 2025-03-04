@@ -32,7 +32,20 @@ module UART_wrapper (
     assign o_led = r_led;
 
 
-    always @(posedge i_clk or posedge i_sed) begin
+    always @(posedge i_cnt) begin
+        if (r_state == 3'b001) begin
+            if (r_cnt < 5'd28) begin
+                r_cnt <= r_cnt + 1'b1;
+            end else begin
+                r_cnt <= 5'd0;
+            end
+        end else begin
+            r_cnt   <= 5'd0;
+        end
+    end
+
+
+    always @(posedge i_clk) begin
         if (r_state == 3'b001) begin
             r_led <= 1;
         end else begin
@@ -41,15 +54,8 @@ module UART_wrapper (
 
         if (i_sed && r_state == 3'b000) begin // 初期状態　r_state == 3'b000
             r_we    <= 1'b0;
-            r_cnt   <= 5'd0;
             r_state <= 3'b001;
-        end else if (i_cnt && r_state == 3'b001) begin // カウント状態　r_state == 3'b001
-            if (r_cnt < 5'd28) begin
-                r_cnt <= r_cnt + 1'b1;
-            end else begin
-                r_cnt <= 5'd0;
-            end
-        end else if (i_sed && r_state == 3'b001 && r_cnt != 5'd0) begin
+        end else if (i_sed && r_state == 3'b001 && r_cnt != 5'd0) begin // カウント状態　r_state == 3'b001
             r_state <= 3'b010;
         end else begin
             case (r_state)
@@ -96,7 +102,6 @@ module UART_wrapper (
                 end
                 3'b100: begin // 送信完了状態　r_state == 3'b100
                     r_state <= 3'b000;
-                    r_cnt   <= 5'd0;
                 end
             endcase
         end

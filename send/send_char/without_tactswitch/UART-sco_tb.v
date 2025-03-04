@@ -29,16 +29,16 @@ module UART_tb();
         // 初期状態
         #10;
         i_sed <= 1'b1; #20;
-        i_sed <= 1'b0; #10;
+        i_sed <= 1'b0; #100;
 
         // カウント状態（ボタン10回押す）
         repeat (10) begin
-            i_cnt <= 1'b1; #10;
-            i_cnt <= 1'b0; #10;
+            i_cnt <= 1'b1; #5;
+            i_cnt <= 1'b0; #5;
         end
 
         // 送信状態（送信待ち状態）
-        i_sed <= 1'b1; #10;
+        i_sed <= 1'b1; #20;
         i_sed <= 1'b0;
 
         #2000;
@@ -50,8 +50,8 @@ module UART_tb();
 
         // カウント状態（ボタン8回押す）
         repeat (8) begin
-            i_cnt <= 1'b1; #10;
-            i_cnt <= 1'b0; #10;
+            i_cnt <= 1'b1; #5;
+            i_cnt <= 1'b0; #5;
         end
 
         // 送信状態（送信待ち状態）
